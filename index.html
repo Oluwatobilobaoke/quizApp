@@ -4,13 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Question Quizz App</title>
+    <title>Question Quiz App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div id="quiz"></div>
-    <button id="submit">Submit Quiz</button>
-    <div id="results"></div>
+    <div class="container">
+        <div class="record">
+            <h4>Question <span class="current-question"></span> of <span class="total-question"></span></h4>
+            <h4>Score : <span class="current-score"></span></h4>
+        </div>
+        <p class="question"></p>
+        <ul>
+            <li class="option option-1" value="a"></li>
+            <li class="option option-2" value="b"></li>
+            <li class="option option-3" value="c"></li>
+            <li class="option option-4" value="d"></li>
+        </ul>
+        <div class="btn-container">
+            <button class="btn hide">Next</button>
+        </div>
+    </div>
+    <script src=""></script>
 </body>
 
 </html>
