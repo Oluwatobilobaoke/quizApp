@@ -1,4 +1,4 @@
-// Caching selectors into variables
+// Assigning the Variables
 const container = document.querySelector('.container'),
     currentQuestion = document.getElementById('currentquestion'),
     allAvailableQuestions = document.getElementById('allquestions'),
@@ -16,7 +16,7 @@ let currentScore = document.querySelector('.current-score'),
 score = 0;
 
 
-// Questions
+// QuestionsBank
 const myQuestions = [
     {
         question: 'Is JavaScript a case-sensitive language?',
@@ -49,8 +49,7 @@ const myQuestions = [
         answer: 'Yes! An anonymous function can be assigned to a variable. It can also be passed as an argument to another function.'
     },
     {
-        question:
-            'What is Callback?',
+        question: 'What is Callback?',
         options: [
             'A callback is a plain JavaScript function passed to some method as an argument or option, executed after another function has finished executing',
             'A callback is a plain JavaScript error function',
@@ -61,8 +60,7 @@ const myQuestions = [
     },
 
     {
-        question:
-            'The built-in methods in JS except?',
+        question: 'The built-in methods in JS except?',
         options: [
             'CharsAt()',
             'indexOf()',
@@ -88,7 +86,7 @@ const showContent = () => {
 
 showContent();
 
-// Show result
+// Display result
 const showResult = () => {
     container.classList.add('result', 'blue');
     const result = (score / myQuestions.length) * 100;
@@ -204,7 +202,7 @@ const nextQuestion = () => {
     }
 }
 
-// add event listener on all four options
+// Calling all EventListener
 optionOne.addEventListener('click', checkOptionOne);
 optionTwo.addEventListener('click', checkOptionTwo);
 optionThree.addEventListener('click', checkOptionThree);
