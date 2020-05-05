@@ -1,155 +1,212 @@
-(function () {
-    // Functions
-    function buildQuiz() {
-        // variable to store the HTML output
-        const output = [];
+// Caching selectors into variables
+const container = document.querySelector('.container'),
+    currentQuestion = document.getElementById('currentquestion'),
+    allAvailableQuestions = document.getElementById('allquestions'),
+    question = document.getElementById('questionbank'),
+    optionOne = document.querySelector('.option-1'),
+    optionTwo = document.querySelector('.option-2'),
+    optionThree = document.querySelector('.option-3'),
+    optionFour = document.querySelector('.option-4'),
+    options = document.querySelectorAll('li'),
+    btn = document.getElementById('btn');
 
-        // for each question...
-        myQuestions.forEach(
-            (currentQuestion, questionNumber) => {
 
-                // variable to store the list of possible answers
-                const answers = [];
+let currentScore = document.querySelector('.current-score'),
+    activeQuestion = 1;
+score = 0;
 
-                // and for each available answer...
-                for (letter in currentQuestion.answers) {
 
-                    // ...add an HTML radio button
-                    answers.push(
-                        `<label>
-                <input type="radio" name="question${questionNumber}" value="${letter}">
-                ${letter} :
-                ${currentQuestion.answers[letter]}
-              </label>`
-                    );
-                }
+// Questions
+const myQuestions = [
+    {
+        question: 'Is JavaScript a case-sensitive language?',
+        options: [
+            'YES.',
+            'NO.',
+            "I Do not Know.",
+            'None of the above',
+        ],
+        answer: "YES."
+    },
+    {
+        question: 'The follwoing are the advantages of JavaScript, except ?',
+        options: [
+            'Much server interaction.',
+            'Immediate feedback to the visitors.',
+            'Increased interactivity.',
+            'Less server interaction.',
+        ],
+        answer: 'Much server interaction.',
+    },
+    {
+        question: 'Can you assign an anonymous function to a variable and pass it as an argument to another function?',
+        options: [
+            'Yes! An anonymous function can be assigned to a variable. It can also be passed as an argument to another function.',
+            'No! An anonymous function can\'t be assigned to a variable. It can only be passed as an argument to another function.',
+            'I don\'t even know the answer',
+            'YES! An anonymous function can be assigned to a variable. and It can\'t be passed as an argument to another function.',
+        ],
+        answer: 'Yes! An anonymous function can be assigned to a variable. It can also be passed as an argument to another function.'
+    },
+    {
+        question:
+            'What is Callback?',
+        options: [
+            'A callback is a plain JavaScript function passed to some method as an argument or option, executed after another function has finished executing',
+            'A callback is a plain JavaScript error function',
+            'A callback is a plain JavaScript function passed to some method as an argument or option, executed before another function finish executing',
+            'A callback is a plain JavaScript function passed to some method as an argument or option, executed for debugging another function',
+        ],
+        answer: 'A callback is a plain JavaScript function passed to some method as an argument or option, executed after another function has finished executing',
+    },
 
-                // add this question and its answers to the output
-                output.push(
-                    `<div class="slide">
-              <div class="question"> ${currentQuestion.question} </div>
-              <div class="answers"> ${answers.join("")} </div>
-            </div>`
-                );
-            }
-        );
+    {
+        question:
+            'The built-in methods in JS except?',
+        options: [
+            'CharsAt()',
+            'indexOf()',
+            'unshift()',
+            'shift()',
+        ],
+        answer: 'CharsAt()',
+    },
+];
 
-        // finally combine our output list into one string of HTML and put it on the page
-        quizContainer.innerHTML = output.join('');
+
+// Change text content
+const showContent = () => {
+    currentQuestion.textContent = activeQuestion;
+    allAvailableQuestions.textContent = myQuestions.length;
+    currentScore.textContent = score;
+    question.textContent = myQuestions[activeQuestion - 1].question;
+    optionOne.textContent = myQuestions[activeQuestion - 1].options[0];
+    optionTwo.textContent = myQuestions[activeQuestion - 1].options[1];
+    optionThree.textContent = myQuestions[activeQuestion - 1].options[2];
+    optionFour.textContent = myQuestions[activeQuestion - 1].options[3];
+}
+
+showContent();
+
+// Show result
+const showResult = () => {
+    container.classList.add('result', 'blue');
+    const result = (score / myQuestions.length) * 100;
+    let remark;
+    if (result < 50) {
+        remark = 'Dont be discouraged, You can do this just Equip yourself.';
+    } else if (result <= 75) {
+        remark = 'Bravo, Hold on Gather more materials and have more handsOn Session.';
+    } else if (result <= 90) {
+        remark = 'Ooin, You\'re doing Well.!'
+    } else {
+        remark = 'Fantabulous, Agba Awo, i say ooin, You did Excellently!';
+    }
+    container.innerHTML = `
+   <h1>${result}%</h1> 
+   <h3 class="center mb">${remark}</h3>
+   <a href="index.html" class="btn">RETRY?</a>
+   `;
+}
+
+const disableBtn = () => {
+    options.forEach(option => {
+        option.classList.add('disabled');
+        if (option.textContent === myQuestions[activeQuestion - 1].answer) {
+            option.classList.add('correct');
+        }
+    })
+}
+
+const checkOptionOne = () => {
+
+    if (optionOne.textContent === myQuestions[activeQuestion - 1].answer) {
+        optionOne.classList.add('correct');
+        score++;
+        showContent();
+
+    } else {
+        optionOne.classList.add('wrong');
+    }
+    disableBtn();
+    btn.classList.add('show');
+
+    if (activeQuestion === myQuestions.length) {
+        btn.textContent = 'Submit';
     }
 
-    function showResults() {
+}
 
-        // gather answer containers from our quiz
-        const answerContainers = quizContainer.querySelectorAll('.answers');
+const checkOptionTwo = () => {
+    if (optionTwo.textContent === myQuestions[activeQuestion - 1].answer) {
+        optionTwo.classList.add('correct');
+        score++;
+        showContent();
 
-        // keep track of user's answers
-        let numCorrect = 0;
+    } else {
+        optionTwo.classList.add('wrong');
+    }
+    disableBtn();
+    btn.classList.add('show');
 
-        // for each question...
-        myQuestions.forEach((currentQuestion, questionNumber) => {
+    if (activeQuestion === myQuestions.length) {
+        btn.textContent = 'Submit';
+    }
+}
 
-            // find selected answer
-            const answerContainer = answerContainers[questionNumber];
-            const selector = `input[name=question${questionNumber}]:checked`;
-            const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+const checkOptionThree = () => {
 
-            // if answer is correct
-            if (userAnswer === currentQuestion.correctAnswer) {
-                // add to the number of correct answers
-                numCorrect++;
+    if (optionThree.textContent === myQuestions[activeQuestion - 1].answer) {
+        optionThree.classList.add('correct');
+        score++;
+        showContent();
 
-                // color the answers green
-                answerContainers[questionNumber].style.color = 'lightgreen';
-            }
-            // if answer is wrong or blank
-            else {
-                // color the answers red
-                answerContainers[questionNumber].style.color = 'red';
-            }
-        });
+    } else {
+        optionThree.classList.add('wrong');
+    }
+    disableBtn();
+    btn.classList.add('show');
 
-        // show number of correct answers out of total
-        resultsContainer.innerHTML = `${numCorrect} out of ${myQuestions.length}`;
+    if (activeQuestion === myQuestions.length) {
+        btn.textContent = 'Submit';
     }
 
-    function showSlide(n) {
-        slides[currentSlide].classList.remove('active-slide');
-        slides[n].classList.add('active-slide');
-        currentSlide = n;
-        if (currentSlide === 0) {
-            previousButton.style.display = 'none';
-        }
-        else {
-            previousButton.style.display = 'inline-block';
-        }
-        if (currentSlide === slides.length - 1) {
-            nextButton.style.display = 'none';
-            submitButton.style.display = 'inline-block';
-        }
-        else {
-            nextButton.style.display = 'inline-block';
-            submitButton.style.display = 'none';
-        }
+}
+
+const checkOptionFour = () => {
+
+    if (optionFour.textContent === myQuestions[activeQuestion - 1].answer) {
+        optionFour.classList.add('correct');
+        score++;
+        showContent();
+
+    } else {
+        optionFour.classList.add('wrong');
     }
+    disableBtn();
+    btn.classList.add('show');
 
-    function showNextSlide() {
-        showSlide(currentSlide + 1);
+    if (activeQuestion === myQuestions.length) {
+        btn.textContent = 'Submit';
     }
+}
 
-    function showPreviousSlide() {
-        showSlide(currentSlide - 1);
+const nextQuestion = () => {
+    if (activeQuestion < myQuestions.length) {
+        activeQuestion = activeQuestion + 1;
+        showContent();
+        btn.classList.remove('show');
+        options.forEach(option => {
+            option.classList.remove('wrong', 'correct', 'disabled');
+        })
+    } else {
+        showResult();
     }
+}
 
-    // Variables
-    const quizContainer = document.getElementById('quiz');
-    const resultsContainer = document.getElementById('results');
-    const submitButton = document.getElementById('submit');
-    const myQuestions = [
-        {
-            question: "Who invented JavaScript?",
-            answers: {
-                a: "Douglas Crockford",
-                b: "Sheryl Sandberg",
-                c: "Brendan Eich"
-            },
-            correctAnswer: "c"
-        },
-        {
-            question: "Which one of these is a JavaScript package manager?",
-            answers: {
-                a: "Node.js",
-                b: "TypeScript",
-                c: "npm"
-            },
-            correctAnswer: "c"
-        },
-        {
-            question: "Which tool can you use to ensure code quality?",
-            answers: {
-                a: "Angular",
-                b: "jQuery",
-                c: "RequireJS",
-                d: "ESLint"
-            },
-            correctAnswer: "d"
-        }
-    ];
-
-    // Kick things off
-    buildQuiz();
-
-    // Pagination
-    const previousButton = document.getElementById("previous");
-    const nextButton = document.getElementById("next");
-    const slides = document.querySelectorAll(".slide");
-    let currentSlide = 0;
-
-    // Show the first slide
-    showSlide(currentSlide);
-
-    // Event listeners
-    submitButton.addEventListener('click', showResults);
-    previousButton.addEventListener("click", showPreviousSlide);
-    nextButton.addEventListener("click", showNextSlide);
-})();
+// add event listener on all four options
+optionOne.addEventListener('click', checkOptionOne);
+optionTwo.addEventListener('click', checkOptionTwo);
+optionThree.addEventListener('click', checkOptionThree);
+optionFour.addEventListener('click', checkOptionFour);
+btn.addEventListener('click', nextQuestion);
